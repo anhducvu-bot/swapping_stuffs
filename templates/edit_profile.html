@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Game Swap</title>
+        <script>
+              function updateRequirements() {
+              var name = document.getElementById('number').value;
+              if (number != null) {
+                document.getElementById('phone_type').required = true;
+              } else {
+                document.getElementById('phone_type').required = false;
+              }
+            }
+
+
+        </script>
+    </head>
+
+    <body>
+
+        <h3> Update my information </h3>
+            <hr>
+            <form method="POST" action="/edit-profile">
+                <label for="first_name">First Name</label>
+                <input type="text" name = "first_name" placeholder="John*" maxlength="50" class = "form-control" value = {{ first_name }} required>
+                <br>
+
+                <label for="last_name">Last Name</label>
+                <input type="text" name = "last_name" placeholder="Doe*" maxlength="50" class = "form-control" value= {{ last_name }} required>
+                <br>
+
+                <label for="nickname">Nickname</label>
+                <input type="text" name = "nickname" placeholder="JohnnyD" maxlength="50" value= "{{ nickname }}" >
+                <br>
+
+                <label for="email">Email</label>
+                <input type="email" name = "email" placeholder=" e.g. john@email.com*" maxlength="50" class = "form-control" value= {{ email }}  readonly required>
+                <br>
+
+                <label for="password">Password</label>
+                <input type="password" id = "password" name = "password" maxlength="50" class = "form-control" value= {{ password }} required>
+                <br>
+
+                <label for="city">City</label>
+                <input type="text" name = "City" placeholder="City" maxlength="50" value= {{ city }}>
+                <br>
+
+                <label for="state">State</label>
+                <select name="state" id="state">
+                    <option value= {{ state }} selected="selected" disabled hidden>{{ state }}</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+                <br>
+
+                <label for="postal_code">Postal Code</label>
+                <input type="text" id="postal_code" name= "postal_code" pattern="[0-9]{5}" placeholder="Five digit Zip*" minlength="3" maxlength="5" class = "form-control" value= {{ postal_code }} required>
+                <br>
+
+                <label for="number">Phone Number (optional)</label>
+                <input type="tel" id="number" name="number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="999-999-9999 format" oninput="updateRequirements()" value= {{ number }}>
+
+                <label for="phone_type">Type</label>
+                <select name="phone_type" id="phone_type">
+                    <option value= {{ phone_type }} selected hidden>{{ phone_type }}</option>
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                    <option value="Mobile">Mobile</option>
+                </select>
+                <br>
+
+                <input type="checkbox" id="phone_share" name="phone_share" {{"checked" if share else ''}}  value= "1">
+                <label for="phone_share">Show phone number in swaps</label>
+                <br>
+                <br>
+
+                 {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    {{ message }}
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+
+
+                <br>
+                <input type="submit" class ="btn" value="Update">
+                <hr>
+                <p> Back to <a href="{{url_for('welcome')}}">Welcome Page</a>
+            </form>
+    </body>
+</html>

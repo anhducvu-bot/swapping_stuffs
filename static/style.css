@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    gap: 20px
+}
+.left, .right {
+  flex: 1;
+}
+.warning-text {
+  color:red;
+  font-weight: bold;
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>My Items</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <h3>Item Counts</h3>
+  <div id='my_item_counts'>
+    <table id='my_item_counts_table' style="border: 10px solid black; border-spacing: 3em 0;">
+      <tr>
+        <th>Board Games</th>
+        <th>Card Games</th>
+        <th>Computer Games</th>
+        <th>Jigsaw Puzzles</th>
+        <th>Video Games</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+          <td style="text-align:center">{{ counts['num_board_games'] }}</td>
+          <td style="text-align:center">{{ counts['num_card_games'] }}</td>
+          <td style="text-align:center">{{ counts['num_computer_games'] }}</td>
+          <td style="text-align:center">{{ counts['num_jigsaw_puzzles'] }}</td>
+          <td style="text-align:center">{{ counts['num_video_games'] }}</td>
+          <td style="text-align:center">{{ counts['total_num_games'] }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>My Items</h3>
+  <div id='my_items'>
+    <table id='my_items_table' style="border: 10px solid black; border-spacing: 3em 0;">
+      <tr>
+          <th>Item #</th>
+          <th>Title</th>
+          <th>Condition</th>
+          <th>Description</th>
+          <th>Game Type</th>
+          <th>Item Details</th>
+      </tr>
+        {% if my_items|length > 0 %}
+          {% for item in my_items %}
+          <tr>
+              <td class="surrogate">{{ item['item_id'] }}</td>
+              <td>{{ item['title'] }}</td>
+              <td>{{ item['item_condition'] }}</td>
+              <td>
+                  {{ item['item_description'] }}
+              </td>
+              <td>{{ item['game_type'] }}</td>
+              <td><a href="{{url_for('itemDetails', item_id=item['item_id'])}}">Details</a></td>
+          </tr>
+          {% endfor %}
+        {% else %}
+            <tr>
+                <td>No items to return.</td>
+            </tr>
+        {% endif %}
+    </table>
+  </div>
+
+  <script>
+<!--      placeholder -->
+  </script>
+</body>
+
+</html>

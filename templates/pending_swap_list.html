@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+  </head>
+
+  <body>
+    <h3>Accept/Reject Swaps</h3>
+    
+    <hr />
+
+    <form method="POST" action="/pending-swap-list">
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Desired Item</th>
+          <th>Proposer</th>
+          <th>Rating</th>
+          <th>Distance</th>
+          <th>Proposed Item</th>
+          <th>Action</th>
+        </tr>
+        {% for swap in pending_swaps %}
+          <tr>
+            <td>{{ swap.proposal_date }}</td>
+            <td>{{ swap.my_item }}</td>
+            <td>{{ swap.other_user_name }}</td>
+            <td>{{ swap.their_avg_rating }}</td>
+            <td>{{ swap.distance }}</td>
+            <td>{{ swap.their_item }}</td>
+            <td>
+              <input value="Accept" name={{swap.swap_id}} type="submit" />
+              <input value="Reject" name={{swap.swap_id}} type="submit" />
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </form>
+
+    <hr />
+
+    <form method="GET" action="/welcome" >
+      <input type="submit" value="Return to Welcome Page" >
+    </form>
+  </body>
+</html>

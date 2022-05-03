@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Game Swap</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <h3>Swap History</h3>
+  <div id='swap_summary'>
+    <table id='summary_table'>
+      <tr>
+        <th>My role</th>
+        <th>Total</th>
+        <th>Accepted</th>
+        <th>Rejected</th>
+        <th>Rejected %</th>
+      </tr>
+    </table>
+  </div>
+  <br>
+  <div id='swap_history'>
+    <table id='history_table' style="border: 10px solid black;">
+      <tr>
+        <th>Swap ID</th>
+        <th>Proposed Date</th>
+        <th>Accepted/Rejected Date</th>
+        <th>Swap status</th>
+        <th>My role</th>
+        <th>Proposed Item</th>
+        <th>Desired Item</th>
+        <th>Other user</th>
+        <th>Details</th>
+        <th>Rating</th>
+      </tr>
+      {% for swap in swap_details %}
+      <tr>
+        <td class="surrogate">{{ swap['swap_id'] }}</td>
+        <td>{{ swap['proposal_date'] }}</td>
+        <td>{{ swap['completion_date'] }}</td>
+        <td>{{ swap['status'] }}</td>
+        <td>{{ 'Proposer' if swap['is_proposer'] else 'Counterparty' }}</td>
+        <td>{{ swap['proposed_item'] }}</td>
+        <td>{{ swap['desired_item'] }}</td>
+        <td>{{ swap['other_user'] }}</td>
+        <td><a href="{{url_for('swap_details', swap_id=swap['swap_id'])}}">Detail</a></td>
+        {% if swap['status'] == 'rejected' %}
+        <td></td>
+        {% elif swap['their_rating'] is none %}
+        <td>
+          <select onchange="onSelectionChange(this)">
+            <option value="">Select</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </td>
+        {% else %}
+        <td> {{ swap['their_rating'] }} </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <form action="{{url_for('welcome')}}">
+    <input type="submit" value="Back to Home page">
+  </form>
+  
+  <script>
+    let swap_summary = JSON.parse('{{swap_summary | tojson | safe}}');
+    let swap_details = JSON.parse('{{ swap_details | tojson | safe }}');
+    console.log(swap_summary);
+    console.log(swap_details);
+
+    let summary_table = document.querySelector('#summary_table');
+    summary_table.border = "1";
+    for (let i = 0; i < swap_summary.length; i++) {
+      let row = summary_table.insertRow();
+      let row_data = swap_summary[i];
+      row.insertCell().innerHTML = row_data['role'];
+      row.insertCell().innerHTML = row_data['total'];
+      row.insertCell().innerHTML = row_data['accepted'];
+      row.insertCell().innerHTML = row_data['rejected'];
+      let last_row = row.insertCell();
+      last_row.innerHTML = row_data['percent_reject'].toFixed(1) + '%';
+      if (row_data['percent_reject'] >= 50) {
+        last_row.style.backgroundColor = 'lightpink'
+      }
+    }
+
+    function onSelectionChange(element) {
+      if (element.value) {
+        let swap_id = $(element).closest('tr').find(".surrogate").text()
+        data = { "swap_id": swap_id, "rating": element.value }
+        fetch('/update-rating', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then(response => response.text())
+          .then(data => {
+            console.log('Success:', data);
+            location.reload();
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }
+
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>LIST NEW ITEM</title>
+      <style>
+          #video_platform {display: none}
+          #video_media {display: none}
+          #computer {display: none}
+          #jigsaw {display: none}
+      </style>
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+
+  <body>
+    <form method="POST" action="/create-item">
+        {{ form.csrf_token }}
+        <p class="base" name="title" id="title">
+            {{ form.title.label }}
+            {{ form.title(size=20) }}
+        </p>
+
+        <p class="base" name="game_type" id="game_type">
+            {{ form.gameTypeDropdown.label }}
+            {{ form.gameTypeDropdown(size=1) }}
+        </p>
+
+        <p class="base" name="item_condition" id="item_condition">
+            {{ form.condition.label }}
+            {{ form.condition(size=1) }}
+        </p>
+
+        <p class="base" id="item_description_label">
+            {{ form.description.label }}
+        </p>
+        <p class="base" name="item_description" id="item_description">
+            {{ form.description(rows=5, cols=50) }}
+        </p>
+
+<!--        add platform, media, piece count-->
+        <p name="video_platform" id="video_platform">
+            {{ form.platform.label }}
+            {{ form.platform(size=1) }}
+        </p>
+
+        <p name="video_media" id="video_media">
+            {{ form.media1.label }}
+            {{ form.media1(size=1) }}
+        </p>
+
+        <p name="computer" id="computer">
+            {{ form.media.label }}
+            {{ form.media(size=1) }}
+        </p>
+
+        <p name="jigsaw" id="jigsaw">
+            {{ form.pieceCount.label }}
+            {{ form.pieceCount(size=1) }}
+        </p>
+
+        <p>
+            <input id="submit" type="submit" value="SUBMIT">
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <span class="warning-text" onclick="this.parentElement.style.display='none';">{{ message }}</span>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+    </form>
+    <script>
+        let game_type_select = document.getElementById('gameTypeDropdown');
+
+        let game_type = "";
+
+        game_type_select.onchange = function(game_type){
+            game_type = game_type_select.value;
+
+            let setNone = function(){
+                document.getElementById("platform").value = undefined;
+                document.getElementById("media1").value = undefined;
+                document.getElementById("media").value = undefined;
+                document.getElementById("pieceCount").value = 0;
+
+                document.getElementById("video_platform").style.display = "none";
+                document.getElementById("video_media").style.display = "none";
+                document.getElementById("computer").style.display = "none";
+                document.getElementById("jigsaw").style.display = "none";
+            }
+
+            if(game_type.toLowerCase() === "video game"){
+                setNone();
+                document.getElementById("video_platform").style.display = 'block';
+                document.getElementById("video_media").style.display = 'block';
+            } else if (game_type.toLowerCase() === "computer game"){
+                setNone();
+                document.getElementById("computer").style.display = 'block';
+            } else if (game_type.toLowerCase() === "jigsaw puzzle"){
+                setNone();
+                document.getElementById("jigsaw").style.display = 'block';
+            } else {
+                setNone();
+                console.log("set none")
+            }
+        }
+
+    </script>
+  </body>
+</html>

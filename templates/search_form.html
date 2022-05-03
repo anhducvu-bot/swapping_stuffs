@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+
+  </head>
+
+  <body>
+    <h3>Search Form</h3>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor%}
+        {% endif %}
+    {% endwith %}
+    <hr />
+
+    <form method="POST" action="{{url_for('searchResults')}}">
+    <input type="radio" name="reason" checked value="By Keyword">By Keyword:<input type="text" name="by_keyword" />
+        <br>
+    <input type="radio" name="reason" value="In My Postal Code">In my postal code
+        <br>
+    <input type="radio" name="reason" value="Within Miles">Within <input type="number" name="number" min="1" max="1000" step="1"/> miles of me
+        <br>
+    <input type="radio" name="reason" value="In Postal Code">In postal code: <input type="text" name="in_postal_code" />
+    <br>
+        <hr />
+    <input type="submit" value="Search!" style=" font-size: larger; color: white; background-color: #00008B">
+  </body>
+</html>

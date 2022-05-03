@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Game Swap</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <h3>Propose Swap</h3>
+
+  <hr />
+
+  {% if distance_warning %}
+  <p>{{ distance_warning }}</p>
+  {% endif %}
+
+  <p>You are proposing a trade for {{ desired_item }}</p>
+
+  <p>Please choose one of your item's to propose in return:</p>
+
+  <form id="form1" method="POST" action="/swap-request-form">
+    <table>
+      <tr>
+        <th>Item #</th>
+        <th>Game Type</th>
+        <th>Title</th>
+        <th>Condition</th>
+        <th>Selection</th>
+      </tr>
+      {% for item in user_items %}
+      <tr>
+        <td>{{ item.item_id }}</td>
+        <td>{{ item.game_type }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.item_condition }}</td>
+        <td><input value={{item.item_id}} name="proposed_item" type="radio" /></td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <br />
+
+    <input type="submit" value="Propose Swap">
+  </form>
+
+  <script>
+    $("#form1").submit(function (e) {
+      if (!$('input[type=radio]:checked').length) {
+        alert("Please select your item to trade");
+
+        return false;
+      }
+
+      return true;
+    });
+  </script>
+</body>
+
+</html>

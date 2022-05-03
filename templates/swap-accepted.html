@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+  </head>
+
+  <body>
+    <h3>Swap Accepted</h3>
+    
+    <hr />
+
+    <p>Contact the proposer to swap items!</p>
+    <p>Email: {{ user_info.email }}</p>
+    <p>Name: {{ user_info.nickname }}</p>
+    {% if user_info.share_phone %}
+      <p>Phone: {{ user_info.number }}</p>
+    {% else %}
+      <p>No phone number available</p>
+    {% endif %}
+    <hr />
+
+    <form method="GET" action="/pending-swap-list" >
+      <input type="submit" value="Return to Accept/Reject Swaps" >
+    </form>
+  </body>
+</html>

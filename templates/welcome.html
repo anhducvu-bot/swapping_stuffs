@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <style>
+        .alert {
+          padding: 5px;
+          background-color: #cc0000;
+          color: white;
+          width: 50%
+          }
+        .closebtn {
+          margin-left: 15px;
+          color: white;
+          font-weight: bold;
+          float: right;
+          font-size: 22px;
+          line-height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+          }
+        .closebtn:hover {
+          color: black;
+        }
+      </style>
+  </head>
+
+  <body>
+    <h3>Game Swap</h3>
+    <p>Welcome, {{ name }}!</p>
+    <form method="POST" action="/logout" >
+      <input type="submit" value="Logout" >
+    </form>
+
+    <hr />
+
+    <table>
+      <tr>
+        <th>My Rating</th>
+        <th>Unaccepted Swaps</th>
+        <th>Unrated Swaps</th>
+      </tr>
+      <tr>
+        <td>{{ rating }}</td>
+        <td>
+          {% if has_old_pending or numPendingSwaps > 5 %}
+          <a class="warning-text" href="/pending-swap-list">{{ numPendingSwaps }}</a>
+          {% else %}
+          <a href="/pending-swap-list">{{ numPendingSwaps }}</a>
+          {% endif %}
+        </td>
+        <td>
+          {% if numUnratedSwaps > 2 %}
+          <a class="warning-text" href="/rate-swap">{{ numUnratedSwaps }}</a>
+          {% else %}
+          <a href="/rate-swap">{{ numUnratedSwaps }}</a>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+
+    <hr />
+
+    <form method="GET" action="/create-item" >
+      <input type="submit" value="List Item" >
+    </form>
+    <form method="GET" action="/items" >
+      <input type="submit" value="My Items" >
+    </form>
+    <form method="GET" action="/search-form" >
+      <input type="submit" value="Search Items" >
+    </form>
+    <form method="GET" action="/swap-list" >
+      <input type="submit" value="Swap History" >
+    </form>
+    <form method="GET" action="/edit-profile" >
+      <input type="submit" value="Edit Profile" >
+    </form>
+
+    <br />
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+  </body>
+</html>

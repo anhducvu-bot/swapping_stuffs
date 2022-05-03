@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+  </head>
+
+  <style>
+
+    .bgColor{
+    background-color: #cfc;
+  }
+  </style>
+
+    <form action="{{ url_for('searchForm') }}">
+       <input type="submit" value="Return to Search Form" style=" font-size: larger; color: teal; background-color: #FFFFC0""/>
+     </form>
+
+      <body>
+
+    {% if header == 1 %}
+    <h3>Search Results: Keyword "{{value}}"</h3>
+    {% elif header == 2 %}
+    <h3>Search Results: In my postal code</h3>
+    {% elif header == 3 %}
+    <h3>Search Results: In postal code {{value}}</h3>
+    {% elif header == 4 %}
+    <h3>Search Results: Within {{value}} miles</h3>
+    {% endif %}
+
+
+
+
+    <div id='search_result'>
+        <table id='search_table' style="border: 10px solid black;">
+        <tr>
+            <th>Item #</th>
+            <th>Game Type</th>
+            <th>Title</th>
+            <th>Condition</th>
+            <th>Description</th>
+            <th>Distance</th>
+            <th>Details</th>
+        </tr>
+        {% for search in search_table %}
+        <tr>
+            <td class="surrogate">{{ search['item_id'] }}</td>
+            <td>{{ search['game_type'] }}</td>
+            {% if search['title_indicator'] == 1 %}
+            <td class="bgColor">{{ search['title'] }}</td>
+            {% elif search['title_indicator'] == 0 %}
+            <td>{{ search['title'] }}</td>
+            {% endif %}
+            <td>{{ search['item_condition'] }}</td>
+
+            {% if search['item_indicator'] == 1 %}
+            <td class="bgColor">{{ search['item_description'] }}</td>
+            {% elif search['item_indicator'] == 0 %}
+            <td>{{ search['item_description'] }}</td>
+            {% endif %}
+            <td>{{ search['distance'] }}</td>
+            <td><a href="{{url_for('itemDetails',item_id=search['item_id'])}}">Detail</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+  </body>
+</html>

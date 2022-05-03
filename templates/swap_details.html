@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Game Swap</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div id="row1" class="container">
+    <div id="swap_detail" class="left">
+      <h3>Swap Details</h3>
+      <div class="container">
+        <div id="col11">
+          <p>Proposed</p>
+          <p>Accepted/Rejected</p>
+          <p>Status</p>
+          <p>My role</p>
+          <p>Rating left</p>
+        </div>
+        <div id="col12">
+          <p>{{swap_detail.proposal_date}}</p>
+          <p>{{swap_detail.completion_date}}</p>
+          <p>{{swap_detail.status}}</p>
+          <p>{{'Proposer' if current_user.is_proposer else 'Counterparty'}}</p>
+          {% if swap_detail.status == 'accepted' %}
+          {% if other_user.rating is none %}
+          <select onchange="onSelectionChange(this)">
+            <option value="">Select</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          {% else %}
+          <p>{{other_user.rating}}</p>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div id="other_user_detail" class="right">
+      <h3>User Details</h3>
+      <div class="container">
+        <div id="col13">
+          <p>Nickname</p>
+          <p>Distance</p>
+          {% if swap_detail.status == 'accepted' %}
+          <p>Name</p>
+          <p>Email</p>
+          {% if other_user.share_phone %}
+          <p>Phone</p>
+          {% endif %}
+          {% endif %}
+        </div>
+        <div id="col14">
+          <p>{{other_user.nickname}}</p>
+          <p>{{swap_detail.distance|round(1)}}</p>
+          {% if swap_detail.status == 'accepted' %}
+          <p>{{other_user.first_name}}</p>
+          <p>{{other_user.email}}</p>
+          {% if other_user.share_phone %}
+          <p>{{other_user.number}} ({{other_user.type}})</p>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="row2" class="container">
+    <div id="proposed_item_detail" class="left">
+      <h3>Proposed Item</h3>
+      <div class="container">
+        <div>
+          <p>Item #</p>
+          <p>Title</p>
+          <p>Game type</p>
+          <p>Condition</p>
+          {% set proposed_game_type = proposed_item.game_type|lower %}
+          {% if proposed_game_type == 'video game' %}
+          <p>Platform</p>
+          <p>Media</p>
+          {% elif proposed_game_type == 'computer game' %}
+          <p>Platform</p>
+          {% elif proposed_game_type == 'jigsaw puzzle' %}
+          <p>Piece count</p>
+          {% endif %}
+          {% if proposed_item['item_description'] %}
+          <p>Description</p>
+          {% endif %}
+        </div>
+        <div>
+          <p>{{proposed_item['item_id']}}</p>
+          <p>{{proposed_item['title']}}</p>
+          <p>{{proposed_item['game_type']}}</p>
+          <p>{{proposed_item['item_condition']}}</p>
+          {% if proposed_game_type == 'video game' %}
+          <p>{{proposed_item.video_game_platform}}</p>
+          <p>{{proposed_item.media}}</p>
+          {% elif proposed_game_type == 'computer game' %}
+          <p>{{proposed_item.computer_platform}}</p>
+          {% elif proposed_game_type == 'jigsaw puzzle' %}
+          <p>{{proposed_item.piece_count}}</p>
+          {% endif %}
+          {% if proposed_item['item_description'] %}
+          <p>{{proposed_item['item_description']}}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div id="desired_item_detail" class="right">
+      <h3>Desired Item</h3>
+      <div class="container">
+        <div>
+          <p>Item #</p>
+          <p>Title</p>
+          <p>Game type</p>
+          <p>Condition</p>
+          {% set desired_game_type = desired_item.game_type|lower %}
+          {% if desired_game_type == 'video game' %}
+          <p>Platform</p>
+          <p>Media</p>
+          {% elif desired_game_type == 'computer game' %}
+          <p>Platform</p>
+          {% elif desired_game_type == 'jigsaw puzzle' %}
+          <p>Piece count</p>
+          {% endif %}
+          {% if desired_item['item_description'] %}
+          <p>Description</p>
+          {% endif %}
+        </div>
+        <div>
+          <p>{{desired_item['item_id']}}</p>
+          <p>{{desired_item['title']}}</p>
+          <p>{{desired_item['game_type']}}</p>
+          <p>{{desired_item['item_condition']}}</p>
+          {% if desired_game_type == 'video game' %}
+          <p>{{desired_item.video_game_platform}}</p>
+          <p>{{desired_item.media}}</p>
+          {% elif desired_game_type == 'computer game' %}
+          <p>{{desired_item.computer_platform}}</p>
+          {% elif desired_game_type == 'jigsaw puzzle' %}
+          <p>{{desired_item.piece_count}}</p>
+          {% endif %}
+          {% if desired_item['item_description'] %}
+          <p>{{desired_item['item_description']}}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form action="{{url_for('swap_list')}}">
+    <input type="submit" value="Back to History">
+  </form>
+
+  <script>
+    function onSelectionChange(element) {
+      if (element.value) {
+        let swap_detail = JSON.parse('{{swap_detail | tojson | safe}}');
+        let swap_id = swap_detail.swap_id
+        data = { "swap_id": swap_id, "rating": element.value }
+        fetch('/update-rating', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then(response => response.text())
+          .then(data => {
+            console.log('Success:', data);
+            location.reload();
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }
+    }
+
+  </script>
+</body>
+
+</html>

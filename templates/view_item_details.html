@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Game Swap</title>
+  </head>
+
+  <form action="{{ url_for('searchForm') }}">
+       <input type="submit" value="Return to Search Form" style=" font-size: larger; color: teal; background-color: #FFFFC0""/>
+  </form>
+
+  <style>
+  #greenbox {
+  background-color: #cfc ;
+  }
+
+  #orangebox {
+  background-color: #FFB700 ;
+  }
+
+   #yellowbox {
+  background-color: #FFFF00 ;
+  }
+
+  #redbox {
+  background-color: #c4342d ;
+  }
+</style>
+
+  <body>
+    <h3>Item Details</h3>
+    <hr />
+    <strong>Item ID:</strong> {{item_details[0]['item_id']}}
+        <br>
+    <strong>Title:</strong> {{item_details[0]['title']}}
+    {% if display_description == "Yes" %}
+        <br>
+    <strong>Description:</strong> {{item_details[0]['item_description']}}
+    {% endif %}
+        <br>
+    <strong>Type:</strong>{{item_details[0]['game_type']}}
+    {% if game_type.lower() == "video game" %}
+        <br>
+    <strong>Video Game Platform:</strong> {{addition_details[0]['video_game_platform']}}
+        <br>
+    <strong>Media: </strong>{{addition_details[0]['media']}}
+    {% elif game_type.lower() == "jigsaw puzzle" %}
+        <br>
+    <strong>Piece Count: </strong>{{addition_details[0]['piece_count']}}
+    {% elif game_type.lower() == "computer game" %}
+        <br>
+    <strong>Computer Platform:</strong> {{addition_details[0]['computer_platform']}}
+    {% endif %}
+        <br>
+    <strong>Condition:</strong> {{item_details[0]['item_condition']}}
+
+
+
+
+
+
+    <hr />
+    <strong>Offered by: {{item_details[0]['last_name']}}, {{item_details[0]['first_name']}} </strong>
+        <br>
+    <strong>Location:</strong> {{item_details[0]['city']}}, {{item_details[0]['state']}} {{item_details[0]['postal_code']}}
+        <br>
+    <strong>Rating:</strong> {{rating}}
+    
+    {% if item_details[0]['distance'] == 0.0 %}
+
+    {% elif item_details[0]['distance'] <= 25 %}
+
+    <div id="greenbox">
+        <strong>Distance:</strong> {{item_details[0]['distance']}} miles
+    </div>
+    {% elif item_details[0]['distance'] > 25 and item_details[0]['distance'] <= 50 %}
+    <div id="yellowbox">
+        <strong>Distance:</strong> {{item_details[0]['distance']}} miles
+    </div>
+    {% elif item_details[0]['distance'] > 50 and item_details[0]['distance'] <= 100 %}
+    <div id="orangebox">
+        <strong>Distance:</strong> {{item_details[0]['distance']}} miles
+    </div>
+    {% elif item_details[0]['distance'] > 100 %}
+    <div id="redbox">
+        <strong>Distance:</strong> {{item_details[0]['distance']}} miles
+    </div>
+    {% endif %}
+
+    <hr />
+    {% if propose_swap %}
+    <form method="POST" action="/item-details/{{item_details[0]['item_id']}}">
+        <input type="submit" value="Propose Swap" style=" font-size: larger; color: white; background-color: #00008B">
+    </form>
+    {% endif %}
+
+
+  </body>
+</html>
